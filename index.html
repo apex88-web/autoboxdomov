@@ -153,48 +153,5 @@
             <p>&copy; 2026 AutoboxDomov.sk. Všetky práva vyhradené.</p>
         </div>
     </footer>
-
-    <!-- JAVASCRIPT PRE ODOSLANIE FORMULÁRA DO GOOGLE TABUĽKY -->
-  <script>
-const scriptURL = 'https://script.google.com/macros/s/AKfycbw0ZpIyuZddhTP2y1z_kzpTyNd6OG4KDT8VpS3jKjz_yrVamBJ6mtYAq7BpxnqQd9nr/exec'; // Vlož adresu v úvodzovkách
-const form = document.querySelector('.booking-form');
-
-form.addEventListener('submit', e => {
-    e.preventDefault();
-    
-    const submitBtn = form.querySelector('.submit-btn');
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Odosielam rezerváciu...';
-
-    // Zbalenie dát do klasického formátu (application/x-www-form-urlencoded)
-    const data = new URLSearchParams();
-    data.append('box', document.getElementById('box-select').value);
-    data.append('dateFrom', document.getElementById('date-from').value);
-    data.append('dateTo', document.getElementById('date-to').value);
-    data.append('name', document.getElementById('name').value);
-    data.append('phone', document.getElementById('phone').value);
-    data.append('address', document.getElementById('address').value);
-    data.append('car', document.getElementById('car').value);
-
-    // Odoslanie s mode 'no-cors' a natívnym kódovaním
-    fetch(scriptURL, { 
-        method: 'POST', 
-        mode: 'no-cors',
-        body: data
-    })
-    .then(() => {
-        alert('Ďakujeme! Vaša nezáväzná rezervácia bola úspešne odoslaná.');
-        form.reset();
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Odoslať nezáväznú rezerváciu';
-    })
-    .catch(error => {
-        console.error('Chyba!', error);
-        alert('Nastala chyba pri odosielaní. Skúste to prosím znova.');
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Odoslať nezáväznú rezerváciu';
-    });
-});
-</script>
 </body>
 </html>
