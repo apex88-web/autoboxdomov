@@ -147,8 +147,8 @@
     </footer>
 
     <!-- JAVASCRIPT PRE ODOSLANIE FORMULÁRA DO GOOGLE TABUĽKY -->
-   <script>
-const scriptURL = 'https://script.google.com/macros/s/AKfycbxbeKj22GbhwTief3AzgY03XX7pUPUFp1_pF1IKATvo9NJ0oj6C06N-yZrdY8QMJIo/exec';
+  <script>
+const scriptURL = 'https://script.google.com/macros/s/AKfycbywq2KuJLOYTpwJL0ZXCnscRaI2JbVyPyDI5txkYZhFRDNzPsRwXxWiOiwSXmMWclN2/exec'; // Vlož adresu v úvodzovkách
 const form = document.querySelector('.booking-form');
 
 form.addEventListener('submit', e => {
@@ -158,35 +158,35 @@ form.addEventListener('submit', e => {
     submitBtn.disabled = true;
     submitBtn.textContent = 'Odosielam rezerváciu...';
 
-    // Zbalíme dáta do štandardného formulára
-    const formData = new FormData();
-    formData.append('box', document.getElementById('box-select').value);
-    formData.append('dateFrom', document.getElementById('date-from').value);
-    formData.append('dateTo', document.getElementById('date-to').value);
-    formData.append('name', document.getElementById('name').value);
-    formData.append('phone', document.getElementById('phone').value);
-    formData.append('address', document.getElementById('address').value);
-    formData.append('car', document.getElementById('car').value);
+    // Zbalenie dát do klasického formátu (application/x-www-form-urlencoded)
+    const data = new URLSearchParams();
+    data.append('box', document.getElementById('box-select').value);
+    data.append('dateFrom', document.getElementById('date-from').value);
+    data.append('dateTo', document.getElementById('date-to').value);
+    data.append('name', document.getElementById('name').value);
+    data.append('phone', document.getElementById('phone').value);
+    data.append('address', document.getElementById('address').value);
+    data.append('car', document.getElementById('car').value);
 
+    // Odoslanie s mode 'no-cors' a natívnym kódovaním
     fetch(scriptURL, { 
         method: 'POST', 
         mode: 'no-cors',
-        body: formData
+        body: data
     })
     .then(() => {
-        alert('Ďakujeme! Vaša nezáväzná rezervácia bola úspešne odoslaná. Čoskoro vás budeme kontaktovať.');
+        alert('Ďakujeme! Vaša nezáväzná rezervácia bola úspešne odoslaná.');
         form.reset();
         submitBtn.disabled = false;
         submitBtn.textContent = 'Odoslať nezáväznú rezerváciu';
     })
     .catch(error => {
-        console.error('Chyba!', error.message);
+        console.error('Chyba!', error);
         alert('Nastala chyba pri odosielaní. Skúste to prosím znova.');
         submitBtn.disabled = false;
         submitBtn.textContent = 'Odoslať nezáväznú rezerváciu';
     });
 });
 </script>
-
 </body>
 </html>
