@@ -97,7 +97,7 @@
             <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted){alert('Ďakujeme! Vaša nezáväzná rezervácia bola úspešne odoslaná.'); document.querySelector('.booking-form').reset(); submitted=false;}"></iframe>
 
             <!-- VŠIMNI SI: Pridali sme action (Tvoja URL), method a target -->
-            <form class="booking-form" action="https://script.google.com/macros/s/AKfycbywq2KuJLOYTpwJL0ZXCnscRaI2JbVyPyDI5txkYZhFRDNzPsRwXxWiOiwSXmMWclN2/exec" method="POST" target="hidden_iframe" onsubmit="submitted=true;">
+            <form class="booking-form" action="https://script.google.com/macros/s/AKfycbw0ZpIyuZddhTP2y1z_kzpTyNd6OG4KDT8VpS3jKjz_yrVamBJ6mtYAq7BpxnqQd9nr/exec" method="POST" target="hidden_iframe" onsubmit="submitted=true;">
                 
                 <div class="form-group">
                     <label for="box-select">Vybraný autobox:</label>
@@ -156,7 +156,7 @@
 
     <!-- JAVASCRIPT PRE ODOSLANIE FORMULÁRA DO GOOGLE TABUĽKY -->
   <script>
-const scriptURL = 'https://script.google.com/macros/s/AKfycbywq2KuJLOYTpwJL0ZXCnscRaI2JbVyPyDI5txkYZhFRDNzPsRwXxWiOiwSXmMWclN2/exec'; // Vlož adresu v úvodzovkách
+const scriptURL = 'https://script.google.com/macros/s/AKfycbw0ZpIyuZddhTP2y1z_kzpTyNd6OG4KDT8VpS3jKjz_yrVamBJ6mtYAq7BpxnqQd9nr/exec'; // Vlož adresu v úvodzovkách
 const form = document.querySelector('.booking-form');
 
 form.addEventListener('submit', e => {
