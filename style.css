@@ -302,3 +302,48 @@ footer {
     padding: 30px 0;
     font-size: 0.9rem;
 }
+/* --- RESPONSÍVNY DIZAJN PRE MOBILY --- */
+@media (max-width: 768px) {
+    /* 1. Oprava hlavičky - prvky sa pekne uložia pod seba a nebudú pretekať */
+    .nav-container {
+        flex-direction: column;
+        height: auto;
+        padding: 15px 0;
+        gap: 15px;
+    }
+    
+    nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    nav a {
+        margin-left: 0;
+        font-size: 0.95rem;
+    }
+
+    /* 2. Zmenšenie obrovských medzier na malých obrazovkách */
+    .hero {
+        padding: 50px 0;
+    }
+    
+    .section, .booking-section {
+        padding: 40px 0;
+    }
+    
+    .hero-content h1 {
+        font-size: 1.8rem;
+    }
+
+    /* 3. Oprava samotného formulára - políčka pôjdu pekne pod seba */
+    .booking-form {
+        padding: 20px; /* na mobile nepotrebujeme taký široký vnútorný okraj */
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr; /* zruší 2 stĺpce, nastaví 1 na celú šírku */
+        gap: 0; 
+    }
+}
