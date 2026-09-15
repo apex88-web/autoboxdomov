@@ -147,47 +147,46 @@
     </footer>
 
     <!-- JAVASCRIPT PRE ODOSLANIE FORMULÁRA DO GOOGLE TABUĽKY -->
-    <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwAQ0n71eCV-nN4fZex7oIDgDMe-I67eG9331_xmlOjcB9fmS6p8SoQsOzf2H9V6PY/exec'; // Sem vlož svoju URL adresu v úvodzovkách
-    const form = document.querySelector('.booking-form');
+   <script>
+const scriptURL = 'https://script.google.com/macros/s/AKfycbwAQ0n71eCV-nN4fZex7oIDgDMe-I67eG9331_xmlOjcB9fmS6p8SoQsOzf2H9V6PY/exec';
+const form = document.querySelector('.booking-form');
 
-    form.addEventListener('submit', e => {
-        e.preventDefault();
-        
-        const submitBtn = form.querySelector('.submit-btn');
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Odosielam rezerváciu...';
+form.addEventListener('submit', e => {
+    e.preventDefault();
+    
+    const submitBtn = form.querySelector('.submit-btn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Odosielam rezerváciu...';
 
-        const formData = {
-            box: document.getElementById('box-select').value,
-            dateFrom: document.getElementById('date-from').value,
-            dateTo: document.getElementById('date-to').value,
-            name: document.getElementById('name').value,
-            phone: document.getElementById('phone').value,
-            address: document.getElementById('address').value,
-            car: document.getElementById('car').value
-        };
+    // Zbalíme dáta do štandardného formulára
+    const formData = new FormData();
+    formData.append('box', document.getElementById('box-select').value);
+    formData.append('dateFrom', document.getElementById('date-from').value);
+    formData.append('dateTo', document.getElementById('date-to').value);
+    formData.append('name', document.getElementById('name').value);
+    formData.append('phone', document.getElementById('phone').value);
+    formData.append('address', document.getElementById('address').value);
+    formData.append('car', document.getElementById('car').value);
 
-        fetch(scriptURL, { 
-            method: 'POST', 
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData)
-        })
-        .then(response => {
-            alert('Ďakujeme! Vaša nezáväzná rezervácia bola úspešne odoslaná. Čoskoro vás budeme kontaktovať.');
-            form.reset();
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Odoslať nezáväznú rezerváciu';
-        })
-        .catch(error => {
-            console.error('Chyba!', error.message);
-            alert('Nastala chyba pri odosielaní. Skúste to prosím znova.');
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Odoslať nezáväznú rezerváciu';
-        });
+    fetch(scriptURL, { 
+        method: 'POST', 
+        mode: 'no-cors',
+        body: formData
+    })
+    .then(() => {
+        alert('Ďakujeme! Vaša nezáväzná rezervácia bola úspešne odoslaná. Čoskoro vás budeme kontaktovať.');
+        form.reset();
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Odoslať nezáväznú rezerváciu';
+    })
+    .catch(error => {
+        console.error('Chyba!', error.message);
+        alert('Nastala chyba pri odosielaní. Skúste to prosím znova.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Odoslať nezáväznú rezerváciu';
     });
-    </script>
+});
+</script>
 
 </body>
 </html>
