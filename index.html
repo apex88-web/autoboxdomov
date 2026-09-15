@@ -87,16 +87,21 @@
         </div>
     </section>
 
-    <!-- REZERVAČNÝ FORMULÁR -->
+   <!-- REZERVAČNÝ FORMULÁR -->
     <section id="rezervacia" class="booking-section">
         <div class="container">
             <h2>Nezáväzná rezervácia</h2>
             <p class="subtitle">Vyplňte formulár a my sa vám ozveme s potvrdením termínu a detailov.</p>
-            
-            <form class="booking-form">
+
+            <!-- Skrytý iframe, ktorý vyrieši presmerovanie Googlu bez chyby 401 -->
+            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted){alert('Ďakujeme! Vaša nezáväzná rezervácia bola úspešne odoslaná.'); document.querySelector('.booking-form').reset(); submitted=false;}"></iframe>
+
+            <!-- VŠIMNI SI: Pridali sme action (Tvoja URL), method a target -->
+            <form class="booking-form" action="AKfycbywq2KuJLOYTpwJL0ZXCnscRaI2JbVyPyDI5txkYZhFRDNzPsRwXxWiOiwSXmMWclN2" method="POST" target="hidden_iframe" onsubmit="submitted=true;">
+                
                 <div class="form-group">
                     <label for="box-select">Vybraný autobox:</label>
-                    <select id="box-select">
+                    <select id="box-select" name="box">
                         <option value="400l">Stredný box (400 l) – 5 € / deň</option>
                         <option value="500l" selected>Veľký rodinný box (500 l) – 7 € / deň</option>
                     </select>
@@ -105,39 +110,42 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="date-from">Dátum od:</label>
-                        <input type="date" id="date-from" required>
+                        <input type="date" id="date-from" name="dateFrom" required>
                     </div>
                     <div class="form-group">
                         <label for="date-to">Dátum do:</label>
-                        <input type="date" id="date-to" required>
+                        <input type="date" id="date-to" name="dateTo" required>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="name">Meno a priezvisko:</label>
-                        <input type="text" id="name" placeholder="Ján Mrkva" required>
+                        <input type="text" id="name" name="name" placeholder="Ján Mrkva" required>
                     </div>
                     <div class="form-group">
                         <label for="phone">Telefónne číslo:</label>
-                        <input type="tel" id="phone" placeholder="+421 900 000 000" required>
+                        <input type="tel" id="phone" name="phone" placeholder="+421 900 000 000" required>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="address">Adresa pre dovoz a montáž (Žilina a okolie):</label>
-                    <input type="text" id="address" placeholder="Ulica, Číslo domu, Mesto" required>
+                    <input type="text" id="address" name="address" placeholder="Ulica, Číslo domu, Mesto" required>
                 </div>
 
                 <div class="form-group">
                     <label for="car">Značka, model a rok výroby auta (pre výber nosičov):</label>
-                    <input type="text" id="car" placeholder="napr. Škoda Octavia Combi, 2019" required>
+                    <input type="text" id="car" name="car" placeholder="napr. Škoda Octavia Combi, 2019" required>
                 </div>
 
                 <button type="submit" class="btn-primary submit-btn">Odoslať nezáväznú rezerváciu</button>
             </form>
         </div>
     </section>
+
+    <!-- Starý fetch skript sme úplne vyhodili, potrebujeme len toto: -->
+    <script>var submitted = false;</script>
 
     <!-- PÄTIČKA -->
     <footer>
