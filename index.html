@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoboxDomov.sk | Požičovňa strešných boxov s dovozom a montážou</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- HLAVIČKA -->
+    <header>
+        <div class="container nav-container">
+            <div class="logo">Autobox<span>Domov</span>.sk</div>
+            <nav>
+                <a href="#ako-to-funguje">Ako to funguje</a>
+                <a href="#ponuka">Ponuka boxov</a>
+                <a href="#rezervacia" class="btn-nav">Rezervovať</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HERO SEKCIA -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Vy len balíte, autobox vám privezieme a namontujeme.</h1>
+            <p>Žiadne behanie do požičovne, žiadne zložité skladovanie. Prídeme až k vám, box odborne namontujeme na auto a po dovolenke ho opäť vyzdvihneme.</p>
+            <a href="#rezervacia" class="btn-primary">Nezáväzná rezervácia</a>
+        </div>
+    </section>
+
+    <!-- AKO TO FUNGUJE -->
+    <section id="ako-to-funguje" class="container section">
+        <h2>Ako prebieha prenájom?</h2>
+        <div class="steps-grid">
+            <div class="step-card">
+                <h3>1. Výber online</h3>
+                <p>Vyberte si vhodný model autoboxu z našej ponuky podľa vašich potrieb.</p>
+            </div>
+            <div class="step-card">
+                <h3>2. Dohoda termínu</h3>
+                <p>Zvolíte si čas a adresu v Žiline a okolí, kedy vám box prinesieme.</p>
+            </div>
+            <div class="step-card">
+                <h3>3. Odborná montáž</h3>
+                <p>Prídeme priamo k vášmu autu a box bezpečne namontujeme.</p>
+            </div>
+            <div class="step-card">
+                <h3>4. Bez starostí</h3>
+                <p>Po návrate z dovolenky opäť prídeme, box demontujeme a odvezieme.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PONUKA BOXOV -->
+    <section id="ponuka" class="container section">
+        <h2>Naše autoboxy</h2>
+        <div class="boxes-grid">
+            <div class="box-card">
+                <div class="box-header">
+                    <h3>Stredný box (400 l)</h3>
+                    <span class="price">5 € / deň</span>
+                </div>
+                <p class="box-desc">Ideálny pre rodinné výlety a menšiu batožinu. Vhodný pre lyže do dĺžky 175 cm.</p>
+                <ul>
+                    <li>Objem: 400 litrov</li>
+                    <li>Nosnosť: do 75 kg</li>
+                    <li>Obojstranné otváranie</li>
+                </ul>
+                <a href="#rezervacia" class="btn-secondary">Vybrať tento box</a>
+            </div>
+
+            <div class="box-card featured">
+                <div class="badge">Najobľúbenejší</div>
+                <div class="box-header">
+                    <h3>Veľký rodinný box (500 l)</h3>
+                    <span class="price">7 € / deň</span>
+                </div>
+                <p class="box-desc">Maximálny priestor pre celú rodinu, kočíky, veľké kufre alebo viacero párov lyží.</p>
+                <ul>
+                    <li>Objem: 500 litrov</li>
+                    <li>Nosnosť: do 75 kg</li>
+                    <li>Prémiový aerodinamický tvar</li>
+                </ul>
+                <a href="#rezervacia" class="btn-primary">Vybrať tento box</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- REZERVAČNÝ FORMULÁR -->
+    <section id="rezervacia" class="booking-section">
+        <div class="container">
+            <h2>Nezáväzná rezervácia</h2>
+            <p class="subtitle">Vyplňte formulár a my sa vám ozveme s potvrdením termínu a detailov.</p>
+            
+            <form class="booking-form">
+                <div class="form-group">
+                    <label for="box-select">Vybraný autobox:</label>
+                    <select id="box-select">
+                        <option value="400l">Stredný box (400 l) – 5 € / deň</option>
+                        <option value="500l" selected>Veľký rodinný box (500 l) – 7 € / deň</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="date-from">Dátum od:</label>
+                        <input type="date" id="date-from" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="date-to">Dátum do:</label>
+                        <input type="date" id="date-to" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Meno a priezvisko:</label>
+                        <input type="text" id="name" placeholder="Ján Mrkva" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Telefónne číslo:</label>
+                        <input type="tel" id="phone" placeholder="+421 900 000 000" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Adresa pre dovoz a montáž (Žilina a okolie):</label>
+                    <input type="text" id="address" placeholder="Ulica, Číslo domu, Mesto" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="car">Značka, model a rok výroby auta (pre výber nosičov):</label>
+                    <input type="text" id="car" placeholder="napr. Škoda Octavia Combi, 2019" required>
+                </div>
+
+                <button type="submit" class="btn-primary submit-btn">Odoslať nezáväznú rezerváciu</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- PÄTIČKA -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 AutoboxDomov.sk. Všetky práva vyhradené.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT PRE ODOSLANIE FORMULÁRA DO GOOGLE TABUĽKY -->
+    <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyAsA-pPpNkGYQxKw8Coo00_Mfw3zibee_f-2lwGhuVKGOP5X-onAZdyY7X7LDW-ec6/exec'; // Sem vlož svoju URL adresu v úvodzovkách
+    const form = document.querySelector('.booking-form');
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        
+        const submitBtn = form.querySelector('.submit-btn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Odosielam rezerváciu...';
+
+        const formData = {
+            box: document.getElementById('box-select').value,
+            dateFrom: document.getElementById('date-from').value,
+            dateTo: document.getElementById('date-to').value,
+            name: document.getElementById('name').value,
+            phone: document.getElementById('phone').value,
+            address: document.getElementById('address').value,
+            car: document.getElementById('car').value
+        };
+
+        fetch(scriptURL, { 
+            method: 'POST', 
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            alert('Ďakujeme! Vaša nezáväzná rezervácia bola úspešne odoslaná. Čoskoro vás budeme kontaktovať.');
+            form.reset();
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Odoslať nezáväznú rezerváciu';
+        })
+        .catch(error => {
+            console.error('Chyba!', error.message);
+            alert('Nastala chyba pri odosielaní. Skúste to prosím znova.');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Odoslať nezáväznú rezerváciu';
+        });
+    });
+    </script>
+
+</body>
+</html>
