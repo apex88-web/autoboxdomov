@@ -178,31 +178,30 @@ function nacitajDostupnost(boxId, targetElementId) {
     const callbackName = 'cb_' + boxId;
     const script = document.createElement('script');
     
-    // Globálna funkcia, ktorú Google skript zavolá po stiahnutí
     window[callbackName] = function(data) {
         delete window[callbackName];
         script.remove();
 
-        const disabledDates = [];
-        if (data.status === 'success' && data.booked) {
-            data.booked.forEach(range => {
-                disabledDates.push({
-                    from: range.from,
-                    to: range.to
-                });
-            });
-        }
+        const booked = (data.status === 'success' && data.booked) ? data.booked : [];
+        const disabledDates = booked.map(range => ({ from: range.from, to: range.to }));
 
         flatpickr(`#${targetElementId}`, {
             inline: true,
             locale: 'sk',
             minDate: 'today',
             disable: disabledDates,
-            dateFormat: 'Y-m-d'
+            dateFormat: 'Y-m-d',
+            onDayCreate: function(dObj, dStr, fp, dayElem) {
+                // Skontrolujeme, či konkrétny deň spadá do rezervácie z tabuľky
+                const dateStr = fp.formatDate(dayElem.dateObj, "Y-m-d");
+                const isBooked = booked.some(r => dateStr >= r.from && dateStr <= r.to);
+                if (isBooked) {
+                    dayElem.classList.add('day-booked');
+                }
+            }
         });
     };
 
-    // Odoslanie požiadavky ako bežný script element (obchádza CORS na 100 %)
     script.src = `${SCRIPT_URL}?box=${boxId}&callback=${callbackName}`;
     document.body.appendChild(script);
 }
