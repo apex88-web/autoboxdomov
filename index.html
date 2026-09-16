@@ -175,7 +175,8 @@
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyy1WWggHstlNmNSFa5Ur6-ptVFOUis0o48MYTeZ8k2lkLobglIDxFphzTWakgRgxg/exec';
 
 function nacitajDostupnost(boxId, targetElementId) {
-    const callbackName = 'cb_' + boxId;
+    // Názov funkcie musí začínať písmenom (napr. box_500l namiesto 500l)
+    const callbackName = 'box_' + boxId;
     const script = document.createElement('script');
     
     window[callbackName] = function(data) {
@@ -191,10 +192,16 @@ function nacitajDostupnost(boxId, targetElementId) {
             minDate: 'today',
             disable: disabledDates,
             dateFormat: 'Y-m-d',
+            showMonths: 1,
             onDayCreate: function(dObj, dStr, fp, dayElem) {
-                // Skontrolujeme, či konkrétny deň spadá do rezervácie z tabuľky
+                // Preskočí dni z predchádzajúceho a nasledujúceho mesiaca
+                if (dayElem.classList.contains('prevMonthDay') || dayElem.classList.contains('nextMonthDay')) {
+                    return;
+                }
+                
                 const dateStr = fp.formatDate(dayElem.dateObj, "Y-m-d");
                 const isBooked = booked.some(r => dateStr >= r.from && dateStr <= r.to);
+                
                 if (isBooked) {
                     dayElem.classList.add('day-booked');
                 }
