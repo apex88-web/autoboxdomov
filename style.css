@@ -389,3 +389,20 @@ footer {
     text-decoration: line-through !important;
     font-weight: 600;
 }
+/* Voľné dni – príjemný zelený podklad a tmavozelené čísla */
+.flatpickr-day:not(.flatpickr-disabled) {
+    background-color: #dcfce7 !important;
+    border-color: #bbf7d0 !important;
+    color: #166534 !important;
+    font-weight: 600;
+}
+
+.flatpickr-day:not(.flatpickr-disabled):hover {
+    background-color: #bbf7d0 !important;
+    border-color: #86efac !important;
+}
+
+/* Aktuálny dnešný deň (ak je voľný) */
+.flatpickr-day.today:not(.flatpickr-disabled) {
+    border-color: #16a34a !important;
+}
