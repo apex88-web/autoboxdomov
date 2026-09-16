@@ -109,9 +109,13 @@
             <h2>Nezáväzná rezervácia</h2>
             <p class="subtitle">Vyplňte formulár a my sa vám ozveme s potvrdením termínu a detailov.</p>
 
-            <!-- Skrytý iframe, ktorý vyrieši presmerovanie Googlu bez chyby 401 -->
-            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted){alert('Ďakujeme! Vaša nezáväzná rezervácia bola úspešne odoslaná.'); document.querySelector('.booking-form').reset(); submitted=false;}"></iframe>
+           <!-- Premenná deklarovaná pred načítaním iframu -->
+            <script>window.submitted = false;</script>
 
+            <!-- Skrytý iframe bez chybových hlášok -->
+            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.submitted){alert('Ďakujeme! Vaša nezáväzná rezervácia bola úspešne odoslaná.'); document.querySelector('.booking-form').reset(); window.submitted=false;}"></iframe>
+
+            <form class="booking-form" action="https://script.google.com/macros/s/AKfycbxUllQuThz8ORyctj18SGh_KR7gE9CYQxGpZuKHnha1vwmnEzQm35ObOARtg6H8sjlP/exec" method="POST" target="hidden_iframe" onsubmit="window.submitted=true;">
             <!-- VŠIMNI SI: Pridali sme action (Tvoja URL), method a target -->
             <form class="booking-form" action="https://script.google.com/macros/s/AKfycbxUllQuThz8ORyctj18SGh_KR7gE9CYQxGpZuKHnha1vwmnEzQm35ObOARtg6H8sjlP/exec" method="POST" target="hidden_iframe" onsubmit="submitted=true;">
                 
@@ -160,8 +164,6 @@
         </div>
     </section>
 
-    <!-- Starý fetch skript sme úplne vyhodili, potrebujeme len toto: -->
-    <script>var submitted = false;</script>
 
     <!-- PÄTIČKA -->
     <footer>
@@ -171,7 +173,7 @@
     </footer>
 
     <script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0ZpIyuZddhTP2y1z_kzpTyNd6OG4KDT8VpS3jKjz_yrVamBJ6mtYAq7BpxnqQd9nr/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxUllQuThz8ORyctj18SGh_KR7gE9CYQxGpZuKHnha1vwmnEzQm35ObOARtg6H8sjlP/exec';
 
 function nacitajDostupnost(boxId, targetElementId) {
     fetch(`${SCRIPT_URL}?box=${boxId}`)
