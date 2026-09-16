@@ -174,7 +174,7 @@
         </div>
     </footer>
     
-  <!-- Skripty knižnice s odloženým načítaním -->
+  <!-- Skripty knižnice -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr" defer></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/sk.js" defer></script>
 
@@ -183,6 +183,7 @@
 
     let fp400, fp500;
     let bookedData = { '400l': [], '500l': [] };
+    let calendarsInitialized = false;
 
     function highlightBooked(boxKey, dayElem, fp) {
         if (dayElem.classList.contains('prevMonthDay') || dayElem.classList.contains('nextMonthDay')) return;
@@ -193,8 +194,10 @@
         }
     }
 
-    // Inicializácia až po kompletnom prvom zobrazení stránky (uvoľní LCP metriku)
-    window.addEventListener('load', () => {
+    function initCalendars() {
+        if (calendarsInitialized || typeof flatpickr === 'undefined') return;
+        calendarsInitialized = true;
+
         fp400 = flatpickr('#calendar-400l', {
             inline: true,
             locale: 'sk',
@@ -229,7 +232,21 @@
 
         script.src = `${SCRIPT_URL}?callback=renderAllCalendars`;
         document.body.appendChild(script);
-    });
+    }
+
+    // Inicializácia až keď sa sekcia ponuky priblíži k obrazovke (alebo po 2 sekundách nečinnosti)
+    const ponukaSection = document.getElementById('ponuka');
+    if ('IntersectionObserver' in window && ponukaSection) {
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                initCalendars();
+                observer.disconnect();
+            }
+        }, { rootMargin: '200px' });
+        observer.observe(ponukaSection);
+    } else {
+        window.addEventListener('load', () => setTimeout(initCalendars, 1000));
+    }
     </script>
     
 </body>
