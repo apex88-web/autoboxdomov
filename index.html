@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AutoboxDomov.sk | Požičovňa strešných boxov s dovozom a montážou</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Flatpickr kalendár -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/sk.js"></script>
 </head>
 <body>
 
@@ -67,9 +71,15 @@
                     <li>Nosnosť: do 75 kg</li>
                     <li>Obojstranné otváranie</li>
                 </ul>
+                
+                 <div class="calendar-wrapper">
+                    <h4>Dostupnosť boxu:</h4>
+                    <div id="calendar-400l"></div>
+                </div>
+                
                 <a href="#rezervacia" class="btn-secondary" onclick="document.getElementById('box-select').value='400l'">Vybrať tento box</a>
             </div>
-
+           
             <div class="box-card featured">
                 <div class="badge">Najobľúbenejší</div>
                 <div class="box-header">
@@ -82,6 +92,12 @@
                     <li>Nosnosť: do 75 kg</li>
                     <li>Prémiový aerodinamický tvar</li>
                 </ul>
+                
+                <div class="calendar-wrapper">
+                    <h4>Dostupnosť boxu:</h4>
+                    <div id="calendar-500l"></div>
+                </div>
+                
                 <a href="#rezervacia" class="btn-primary" onclick="document.getElementById('box-select').value='500l'">Vybrať tento box</a>
             </div>
         </div>
@@ -153,5 +169,41 @@
             <p>&copy; 2026 AutoboxDomov.sk. Všetky práva vyhradené.</p>
         </div>
     </footer>
+
+    <script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0ZpIyuZddhTP2y1z_kzpTyNd6OG4KDT8VpS3jKjz_yrVamBJ6mtYAq7BpxnqQd9nr/exec';
+
+function nacitajDostupnost(boxId, targetElementId) {
+    fetch(`${SCRIPT_URL}?box=${boxId}`)
+        .then(res => res.json())
+        .then(data => {
+            const disabledDates = [];
+            if (data.status === 'success' && data.booked) {
+                data.booked.forEach(range => {
+                    disabledDates.push({
+                        from: range.from,
+                        to: range.to
+                    });
+                });
+            }
+
+            flatpickr(`#${targetElementId}`, {
+                inline: true,
+                locale: 'sk',
+                minDate: 'today',
+                disable: disabledDates,
+                dateFormat: 'Y-m-d'
+            });
+        })
+        .catch(err => console.error(`Chyba načítania pre ${boxId}:`, err));
+}
+
+// Spustenie kalendárov po načítaní
+document.addEventListener('DOMContentLoaded', () => {
+    nacitajDostupnost('400l', 'calendar-400l');
+    nacitajDostupnost('500l', 'calendar-500l');
+});
+</script>
+    
 </body>
 </html>
