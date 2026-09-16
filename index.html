@@ -115,9 +115,8 @@
             <!-- Skrytý iframe bez chybových hlášok -->
             <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.submitted){alert('Ďakujeme! Vaša nezáväzná rezervácia bola úspešne odoslaná.'); document.querySelector('.booking-form').reset(); window.submitted=false;}"></iframe>
 
-            <form class="booking-form" action="https://script.google.com/macros/s/AKfycbxUllQuThz8ORyctj18SGh_KR7gE9CYQxGpZuKHnha1vwmnEzQm35ObOARtg6H8sjlP/exec" method="POST" target="hidden_iframe" onsubmit="window.submitted=true;">
-            <!-- VŠIMNI SI: Pridali sme action (Tvoja URL), method a target -->
-            <form class="booking-form" action="https://script.google.com/macros/s/AKfycbxUllQuThz8ORyctj18SGh_KR7gE9CYQxGpZuKHnha1vwmnEzQm35ObOARtg6H8sjlP/exec" method="POST" target="hidden_iframe" onsubmit="submitted=true;">
+            <form class="booking-form" action="https://script.google.com/macros/s/AKfycbyy1WWggHstlNmNSFa5Ur6-ptVFOUis0o48MYTeZ8k2lkLobglIDxFphzTWakgRgxg/exec" method="POST" target="hidden_iframe" onsubmit="window.submitted=true;">
+            
                 
                 <div class="form-group">
                     <label for="box-select">Vybraný autobox:</label>
