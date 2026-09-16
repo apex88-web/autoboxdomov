@@ -5,11 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AutoboxDomov.sk | Požičovňa strešných boxov s dovozom a montážou</title>
     
-    <!-- Preconnect zrýchli stiahnutie skriptov -->
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    
     <link rel="stylesheet" href="style.css">
-    <!-- Asynchrónne CSS kalendára – neblokuje vykreslenie textov -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"></noscript>
 </head>
@@ -75,12 +72,12 @@
                     <li>Obojstranné otváranie</li>
                 </ul>
                 
-                 <div class="calendar-wrapper">
+                <div class="calendar-wrapper">
                     <h4>Dostupnosť boxu:</h4>
                     <div id="calendar-400l"></div>
                 </div>
                 
-                <a href="#rezervacia" class="btn-secondary" onclick="document.getElementById('box-select').value='400l'">Vybrať tento box</a>
+                <a href="#rezervacia" class="btn-secondary" onclick="vyberBoxZPonuky('400l')">Vybrať tento box</a>
             </div>
            
             <div class="box-card featured">
@@ -93,7 +90,7 @@
                 <ul>
                     <li>Objem: 500 litrov</li>
                     <li>Nosnosť: do 75 kg</li>
-                    <li>Prémiový aerodynamický tvar</li>
+                    <li>Prémiový aerodinamický tvar</li>
                 </ul>
                 
                 <div class="calendar-wrapper">
@@ -101,7 +98,7 @@
                     <div id="calendar-500l"></div>
                 </div>
                 
-                <a href="#rezervacia" class="btn-primary" onclick="document.getElementById('box-select').value='500l'">Vybrať tento box</a>
+                <a href="#rezervacia" class="btn-primary" onclick="vyberBoxZPonuky('500l')">Vybrať tento box</a>
             </div>
         </div>
     </section>
@@ -112,14 +109,11 @@
             <h2>Nezáväzná rezervácia</h2>
             <p class="subtitle">Vyplňte formulár a my sa vám ozveme s potvrdením termínu a detailov.</p>
 
-           <!-- Premenná deklarovaná pred načítaním iframu -->
             <script>window.submitted = false;</script>
 
-            <!-- Skrytý iframe bez chybových hlášok -->
-            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.submitted){alert('Ďakujeme! Vaša nezáväzná rezervácia bola úspešne odoslaná.'); document.querySelector('.booking-form').reset(); window.submitted=false;}"></iframe>
+            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.submitted){alert('Ďakujeme! Vaša nezáväzná rezervácia bola úspešne odoslaná.'); document.querySelector('.booking-form').reset(); if(window.fpFrom) window.fpFrom.clear(); if(window.fpTo) window.fpTo.clear(); window.submitted=false;}"></iframe>
 
             <form class="booking-form" action="https://script.google.com/macros/s/AKfycbyp3pAn0eg-6FBReQiUg9RPWEz7v0ZA04Ax9XbPhRB6pjaZF4gFEGggsEzXav4VwtUF/exec" method="POST" target="hidden_iframe" onsubmit="window.submitted=true;">
-            
                 
                 <div class="form-group">
                     <label for="box-select">Vybraný autobox:</label>
@@ -132,11 +126,11 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="date-from">Dátum od:</label>
-                        <input type="date" id="date-from" name="dateFrom" required>
+                        <input type="text" id="date-from" name="dateFrom" placeholder="Zvoľte dátum od" required readonly>
                     </div>
                     <div class="form-group">
                         <label for="date-to">Dátum do:</label>
-                        <input type="date" id="date-to" name="dateTo" required>
+                        <input type="text" id="date-to" name="dateTo" placeholder="Zvoľte dátum do" required readonly>
                     </div>
                 </div>
 
@@ -166,22 +160,23 @@
         </div>
     </section>
 
-
     <!-- PÄTIČKA -->
     <footer>
         <div class="container">
             <p>&copy; 2026 AutoboxDomov.sk. Všetky práva vyhradené.</p>
         </div>
     </footer>
-    
-  <!-- Skripty knižnice -->
+
+    <!-- KNIŽNICE KALENDÁRA -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr" defer></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/sk.js" defer></script>
 
+    <!-- LOGIKA KALENDÁROV A DYNAMICKÉHO FORMULÁRA -->
     <script>
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyp3pAn0eg-6FBReQiUg9RPWEz7v0ZA04Ax9XbPhRB6pjaZF4gFEGggsEzXav4VwtUF/exec';
 
     let fp400, fp500;
+    let fpFrom, fpTo;
     let bookedData = { '400l': [], '500l': [] };
     let calendarsInitialized = false;
 
@@ -194,9 +189,55 @@
         }
     }
 
+    function aktualizujDostupnostFormulara(boxKey) {
+        if (!fpFrom || !fpTo) return;
+        const disabledRanges = (bookedData[boxKey] || []).map(r => ({ from: r.from, to: r.to }));
+        fpFrom.clear();
+        fpTo.clear();
+        fpFrom.set('disable', disabledRanges);
+        fpTo.set('disable', disabledRanges);
+    }
+
+    function vyberBoxZPonuky(boxKey) {
+        const select = document.getElementById('box-select');
+        if (select) {
+            select.value = boxKey;
+            aktualizujDostupnostFormulara(boxKey);
+        }
+    }
+
+    function initFormDatepickers() {
+        fpFrom = flatpickr('#date-from', {
+            locale: 'sk',
+            minDate: 'today',
+            dateFormat: 'Y-m-d',
+            onChange: function(selectedDates, dateStr) {
+                if (fpTo) {
+                    fpTo.set('minDate', dateStr);
+                }
+            }
+        });
+
+        fpTo = flatpickr('#date-to', {
+            locale: 'sk',
+            minDate: 'today',
+            dateFormat: 'Y-m-d'
+        });
+
+        const select = document.getElementById('box-select');
+        if (select) {
+            select.addEventListener('change', (e) => {
+                aktualizujDostupnostFormulara(e.target.value);
+            });
+            aktualizujDostupnostFormulara(select.value);
+        }
+    }
+
     function initCalendars() {
         if (calendarsInitialized || typeof flatpickr === 'undefined') return;
         calendarsInitialized = true;
+
+        initFormDatepickers();
 
         fp400 = flatpickr('#calendar-400l', {
             inline: true,
@@ -223,10 +264,14 @@
 
             if (response.status === 'success' && response.data) {
                 bookedData = response.data;
+                
                 fp400.set('disable', bookedData['400l'].map(r => ({ from: r.from, to: r.to })));
                 fp500.set('disable', bookedData['500l'].map(r => ({ from: r.from, to: r.to })));
                 fp400.redraw();
                 fp500.redraw();
+
+                const currentBox = document.getElementById('box-select').value;
+                aktualizujDostupnostFormulara(currentBox);
             }
         };
 
@@ -234,7 +279,6 @@
         document.body.appendChild(script);
     }
 
-    // Inicializácia až keď sa sekcia ponuky priblíži k obrazovke (alebo po 2 sekundách nečinnosti)
     const ponukaSection = document.getElementById('ponuka');
     if ('IntersectionObserver' in window && ponukaSection) {
         const observer = new IntersectionObserver((entries) => {
@@ -248,6 +292,5 @@
         window.addEventListener('load', () => setTimeout(initCalendars, 1000));
     }
     </script>
-    
 </body>
 </html>
