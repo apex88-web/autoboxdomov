@@ -372,3 +372,20 @@ footer {
     color: #ef4444 !important;
     text-decoration: line-through;
 }
+/* Minulé dni a dni mimo mesiaca – jemne sivé, neprečiarknuté */
+.flatpickr-day.flatpickr-disabled, 
+.flatpickr-day.flatpickr-disabled:hover {
+    color: #d1d5db !important;
+    background: transparent !important;
+    text-decoration: none !important;
+    cursor: not-allowed;
+}
+
+/* IBA reálne obsadené termíny z tabuľky – červené s prečiarknutím */
+.flatpickr-day.day-booked, 
+.flatpickr-day.day-booked:hover {
+    background-color: #fee2e2 !important;
+    color: #ef4444 !important;
+    text-decoration: line-through !important;
+    font-weight: 600;
+}
