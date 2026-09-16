@@ -92,11 +92,12 @@ nav a:hover {
     background-color: var(--primary);
 }
 
-/* HERO SEKCIA - Svieži dovolenkový gradient s jemným svetelným akcentom */
+
+/* HERO SEKCIA - Svieži, prémiový kráľovsko-modrý gradient */
 .hero {
-    background: radial-gradient(circle at 50% 20%, #2563eb 0%, #1d4ed8 45%, #0f2b66 100%);
+    background: radial-gradient(circle at 50% 25%, #2563eb 0%, #1d4ed8 50%, #0f2b66 100%);
     color: white;
-    padding: 90px 0 85px;
+    padding: 85px 0 80px;
     text-align: center;
 }
 
@@ -132,11 +133,20 @@ nav a:hover {
 }
 
 .hero-content p {
-    font-size: 1.18rem;
+    font-size: 1.15rem;
     max-width: 660px;
-    margin: 0 auto 36px;
-    color: #94a3b8;
+    margin: 0 auto 34px;
+    color: #e0e7ff; /* Jasnejší, jemne modrastý biely text */
     line-height: 1.6;
+}
+
+.hero-trust {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    font-weight: 500;
 }
 
 .hero-actions {
