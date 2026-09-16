@@ -92,11 +92,11 @@ nav a:hover {
     background-color: var(--primary);
 }
 
-/* HERO SEKCIA */
+/* HERO SEKCIA - Svieži dovolenkový gradient s jemným svetelným akcentom */
 .hero {
-    background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
+    background: radial-gradient(circle at 50% 20%, #2563eb 0%, #1d4ed8 45%, #0f2b66 100%);
     color: white;
-    padding: 90px 0 80px;
+    padding: 90px 0 85px;
     text-align: center;
 }
 
@@ -445,32 +445,57 @@ footer {
 
 /* MOBIL */
 @media (max-width: 768px) {
+    /* 1. Čistý jednoriadkový header: logo vľavo, tlačidlo vpravo */
     .nav-container {
-        flex-direction: column;
-        height: auto;
-        padding: 16px 0;
-        gap: 16px;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        height: 60px;
+        padding: 0 16px;
     }
-    nav a {
-        margin: 0 10px;
+
+    .brand-logo {
+        font-size: 1.2rem;
     }
+
+    /* Skryjeme textové odkazy, ktoré zalamovali riadok */
+    nav a:not(.btn-nav) {
+        display: none;
+    }
+
+    /* Kompaktné tlačidlo vpravo */
+    nav .btn-nav {
+        margin-left: 0;
+        padding: 8px 14px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+    }
+
+    /* 2. Zmenšenie rozstupov hero sekcie na mobile */
     .hero {
-        padding: 55px 0;
+        padding: 50px 0 45px;
     }
+    
     .hero-content h1 {
-        font-size: 2rem;
+        font-size: 1.85rem;
+        line-height: 1.25;
     }
+
     .hero-actions {
         flex-direction: column;
         gap: 12px;
     }
+
     .hero-trust {
         flex-direction: column;
         gap: 10px;
     }
+
+    /* 3. Jednostĺpcový formulár */
     .booking-form {
-        padding: 24px;
+        padding: 20px 16px;
     }
+    
     .form-row {
         grid-template-columns: 1fr;
         gap: 0;
