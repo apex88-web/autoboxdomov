@@ -365,44 +365,39 @@ footer {
     border: 1px solid #e5e7eb;
 }
 
-/* Zvýraznenie obsadených dní */
-.flatpickr-day.flatpickr-disabled, 
-.flatpickr-day.flatpickr-disabled:hover {
-    background-color: #fee2e2 !important;
-    color: #ef4444 !important;
-    text-decoration: line-through;
-}
-/* Minulé dni a dni mimo mesiaca – jemne sivé, neprečiarknuté */
-.flatpickr-day.flatpickr-disabled, 
-.flatpickr-day.flatpickr-disabled:hover {
-    color: #d1d5db !important;
+/* Dni mimo aktuálneho mesiaca a minulé dni */
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay,
+.flatpickr-day.flatpickr-disabled:not(.day-booked) {
+    color: #cbd5e1 !important;
     background: transparent !important;
+    border-color: transparent !important;
     text-decoration: none !important;
-    cursor: not-allowed;
+    cursor: default;
 }
 
-/* IBA reálne obsadené termíny z tabuľky – červené s prečiarknutím */
-.flatpickr-day.day-booked, 
-.flatpickr-day.day-booked:hover {
-    background-color: #fee2e2 !important;
-    color: #ef4444 !important;
-    text-decoration: line-through !important;
-    font-weight: 600;
-}
-/* Voľné dni – príjemný zelený podklad a tmavozelené čísla */
-.flatpickr-day:not(.flatpickr-disabled) {
+/* Voľné dni v aktuálnom mesiaci */
+.flatpickr-day:not(.flatpickr-disabled):not(.prevMonthDay):not(.nextMonthDay) {
     background-color: #dcfce7 !important;
     border-color: #bbf7d0 !important;
     color: #166534 !important;
     font-weight: 600;
 }
 
-.flatpickr-day:not(.flatpickr-disabled):hover {
+.flatpickr-day:not(.flatpickr-disabled):not(.prevMonthDay):not(.nextMonthDay):hover {
     background-color: #bbf7d0 !important;
-    border-color: #86efac !important;
 }
 
-/* Aktuálny dnešný deň (ak je voľný) */
-.flatpickr-day.today:not(.flatpickr-disabled) {
+/* Dnešný deň */
+.flatpickr-day.today:not(.day-booked) {
     border-color: #16a34a !important;
+}
+
+/* IBA obsadené dni z tabuľky */
+.flatpickr-day.day-booked {
+    background-color: #fee2e2 !important;
+    border-color: #fca5a5 !important;
+    color: #dc2626 !important;
+    text-decoration: line-through !important;
+    font-weight: 600;
 }
