@@ -115,7 +115,7 @@
             <!-- Skrytý iframe bez chybových hlášok -->
             <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(window.submitted){alert('Ďakujeme! Vaša nezáväzná rezervácia bola úspešne odoslaná.'); document.querySelector('.booking-form').reset(); window.submitted=false;}"></iframe>
 
-            <form class="booking-form" action="https://script.google.com/macros/s/AKfycbyy1WWggHstlNmNSFa5Ur6-ptVFOUis0o48MYTeZ8k2lkLobglIDxFphzTWakgRgxg/exec" method="POST" target="hidden_iframe" onsubmit="window.submitted=true;">
+            <form class="booking-form" action="https://script.google.com/macros/s/AKfycbyp3pAn0eg-6FBReQiUg9RPWEz7v0ZA04Ax9XbPhRB6pjaZF4gFEGggsEzXav4VwtUF/exec" method="POST" target="hidden_iframe" onsubmit="window.submitted=true;">
             
                 
                 <div class="form-group">
@@ -172,50 +172,61 @@
     </footer>
 
 <script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyy1WWggHstlNmNSFa5Ur6-ptVFOUis0o48MYTeZ8k2lkLobglIDxFphzTWakgRgxg/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyp3pAn0eg-6FBReQiUg9RPWEz7v0ZA04Ax9XbPhRB6pjaZF4gFEGggsEzXav4VwtUF/exec';
 
-function nacitajDostupnost(boxId, targetElementId) {
-    // Názov funkcie musí začínať písmenom (napr. box_500l namiesto 500l)
-    const callbackName = 'box_' + boxId;
-    const script = document.createElement('script');
-    
-    window[callbackName] = function(data) {
-        delete window[callbackName];
-        script.remove();
+let fp400, fp500;
+let bookedData = { '400l': [], '500l': [] };
 
-        const booked = (data.status === 'success' && data.booked) ? data.booked : [];
-        const disabledDates = booked.map(range => ({ from: range.from, to: range.to }));
-
-        flatpickr(`#${targetElementId}`, {
-            inline: true,
-            locale: 'sk',
-            minDate: 'today',
-            disable: disabledDates,
-            dateFormat: 'Y-m-d',
-            showMonths: 1,
-            onDayCreate: function(dObj, dStr, fp, dayElem) {
-                // Preskočí dni z predchádzajúceho a nasledujúceho mesiaca
-                if (dayElem.classList.contains('prevMonthDay') || dayElem.classList.contains('nextMonthDay')) {
-                    return;
-                }
-                
-                const dateStr = fp.formatDate(dayElem.dateObj, "Y-m-d");
-                const isBooked = booked.some(r => dateStr >= r.from && dateStr <= r.to);
-                
-                if (isBooked) {
-                    dayElem.classList.add('day-booked');
-                }
-            }
-        });
-    };
-
-    script.src = `${SCRIPT_URL}?box=${boxId}&callback=${callbackName}`;
-    document.body.appendChild(script);
+// Pomocná funkcia na prefarbenie obsadených dní
+function highlightBooked(boxKey, dayElem, fp) {
+    if (dayElem.classList.contains('prevMonthDay') || dayElem.classList.contains('nextMonthDay')) return;
+    const dateStr = fp.formatDate(dayElem.dateObj, "Y-m-d");
+    const isBooked = (bookedData[boxKey] || []).some(r => dateStr >= r.from && dateStr <= r.to);
+    if (isBooked) {
+        dayElem.classList.add('day-booked');
+    }
 }
 
+// 1. Okamžitá inicializácia kalendárov bez čakania na sieť
 document.addEventListener('DOMContentLoaded', () => {
-    nacitajDostupnost('400l', 'calendar-400l');
-    nacitajDostupnost('500l', 'calendar-500l');
+    fp400 = flatpickr('#calendar-400l', {
+        inline: true,
+        locale: 'sk',
+        minDate: 'today',
+        dateFormat: 'Y-m-d',
+        showMonths: 1,
+        onDayCreate: (dObj, dStr, fp, el) => highlightBooked('400l', el, fp)
+    });
+
+    fp500 = flatpickr('#calendar-500l', {
+        inline: true,
+        locale: 'sk',
+        minDate: 'today',
+        dateFormat: 'Y-m-d',
+        showMonths: 1,
+        onDayCreate: (dObj, dStr, fp, el) => highlightBooked('500l', el, fp)
+    });
+
+    // 2. Jeden spoločný dotaz pre oba boxy
+    const script = document.createElement('script');
+    window.renderAllCalendars = function(response) {
+        delete window.renderAllCalendars;
+        script.remove();
+
+        if (response.status === 'success' && response.data) {
+            bookedData = response.data;
+            
+            // Nastavenie blokovania a prekreslenie
+            fp400.set('disable', bookedData['400l'].map(r => ({ from: r.from, to: r.to })));
+            fp500.set('disable', bookedData['500l'].map(r => ({ from: r.from, to: r.to })));
+            
+            fp400.redraw();
+            fp500.redraw();
+        }
+    };
+
+    script.src = `${SCRIPT_URL}?callback=renderAllCalendars`;
+    document.body.appendChild(script);
 });
 </script>
     
