@@ -4,10 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AutoboxDomov.sk | Požičovňa strešných boxov s dovozom a montážou</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Flatpickr kalendár -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     
+    <!-- Preconnect zrýchli stiahnutie skriptov -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    
+    <link rel="stylesheet" href="style.css">
+    <!-- Asynchrónne CSS kalendára – neblokuje vykreslenie textov -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"></noscript>
 </head>
 <body>
 
@@ -170,67 +174,63 @@
         </div>
     </footer>
     
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://npmcdn.com/flatpickr/dist/l10n/sk.js"></script>
-    
-<script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyp3pAn0eg-6FBReQiUg9RPWEz7v0ZA04Ax9XbPhRB6pjaZF4gFEGggsEzXav4VwtUF/exec';
+  <!-- Skripty knižnice s odloženým načítaním -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr" defer></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/sk.js" defer></script>
 
-let fp400, fp500;
-let bookedData = { '400l': [], '500l': [] };
+    <script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxUllQuThz8ORyctj18SGh_KR7gE9CYQxGpZuKHnha1vwmnEzQm35ObOARtg6H8sjlP/exec';
 
-// Pomocná funkcia na prefarbenie obsadených dní
-function highlightBooked(boxKey, dayElem, fp) {
-    if (dayElem.classList.contains('prevMonthDay') || dayElem.classList.contains('nextMonthDay')) return;
-    const dateStr = fp.formatDate(dayElem.dateObj, "Y-m-d");
-    const isBooked = (bookedData[boxKey] || []).some(r => dateStr >= r.from && dateStr <= r.to);
-    if (isBooked) {
-        dayElem.classList.add('day-booked');
-    }
-}
+    let fp400, fp500;
+    let bookedData = { '400l': [], '500l': [] };
 
-// 1. Okamžitá inicializácia kalendárov bez čakania na sieť
-document.addEventListener('DOMContentLoaded', () => {
-    fp400 = flatpickr('#calendar-400l', {
-        inline: true,
-        locale: 'sk',
-        minDate: 'today',
-        dateFormat: 'Y-m-d',
-        showMonths: 1,
-        onDayCreate: (dObj, dStr, fp, el) => highlightBooked('400l', el, fp)
-    });
-
-    fp500 = flatpickr('#calendar-500l', {
-        inline: true,
-        locale: 'sk',
-        minDate: 'today',
-        dateFormat: 'Y-m-d',
-        showMonths: 1,
-        onDayCreate: (dObj, dStr, fp, el) => highlightBooked('500l', el, fp)
-    });
-
-    // 2. Jeden spoločný dotaz pre oba boxy
-    const script = document.createElement('script');
-    window.renderAllCalendars = function(response) {
-        delete window.renderAllCalendars;
-        script.remove();
-
-        if (response.status === 'success' && response.data) {
-            bookedData = response.data;
-            
-            // Nastavenie blokovania a prekreslenie
-            fp400.set('disable', bookedData['400l'].map(r => ({ from: r.from, to: r.to })));
-            fp500.set('disable', bookedData['500l'].map(r => ({ from: r.from, to: r.to })));
-            
-            fp400.redraw();
-            fp500.redraw();
+    function highlightBooked(boxKey, dayElem, fp) {
+        if (dayElem.classList.contains('prevMonthDay') || dayElem.classList.contains('nextMonthDay')) return;
+        const dateStr = fp.formatDate(dayElem.dateObj, "Y-m-d");
+        const isBooked = (bookedData[boxKey] || []).some(r => dateStr >= r.from && dateStr <= r.to);
+        if (isBooked) {
+            dayElem.classList.add('day-booked');
         }
-    };
+    }
 
-    script.src = `${SCRIPT_URL}?callback=renderAllCalendars`;
-    document.body.appendChild(script);
-});
-</script>
+    // Inicializácia až po kompletnom prvom zobrazení stránky (uvoľní LCP metriku)
+    window.addEventListener('load', () => {
+        fp400 = flatpickr('#calendar-400l', {
+            inline: true,
+            locale: 'sk',
+            minDate: 'today',
+            dateFormat: 'Y-m-d',
+            showMonths: 1,
+            onDayCreate: (dObj, dStr, fp, el) => highlightBooked('400l', el, fp)
+        });
+
+        fp500 = flatpickr('#calendar-500l', {
+            inline: true,
+            locale: 'sk',
+            minDate: 'today',
+            dateFormat: 'Y-m-d',
+            showMonths: 1,
+            onDayCreate: (dObj, dStr, fp, el) => highlightBooked('500l', el, fp)
+        });
+
+        const script = document.createElement('script');
+        window.renderAllCalendars = function(response) {
+            delete window.renderAllCalendars;
+            script.remove();
+
+            if (response.status === 'success' && response.data) {
+                bookedData = response.data;
+                fp400.set('disable', bookedData['400l'].map(r => ({ from: r.from, to: r.to })));
+                fp500.set('disable', bookedData['500l'].map(r => ({ from: r.from, to: r.to })));
+                fp400.redraw();
+                fp500.redraw();
+            }
+        };
+
+        script.src = `${SCRIPT_URL}?callback=renderAllCalendars`;
+        document.body.appendChild(script);
+    });
+    </script>
     
 </body>
 </html>
