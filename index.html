@@ -171,35 +171,42 @@
         </div>
     </footer>
 
-    <script>
+<script>
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyy1WWggHstlNmNSFa5Ur6-ptVFOUis0o48MYTeZ8k2lkLobglIDxFphzTWakgRgxg/exec';
 
 function nacitajDostupnost(boxId, targetElementId) {
-    fetch(`${SCRIPT_URL}?box=${boxId}`)
-        .then(res => res.json())
-        .then(data => {
-            const disabledDates = [];
-            if (data.status === 'success' && data.booked) {
-                data.booked.forEach(range => {
-                    disabledDates.push({
-                        from: range.from,
-                        to: range.to
-                    });
-                });
-            }
+    const callbackName = 'cb_' + boxId;
+    const script = document.createElement('script');
+    
+    // Globálna funkcia, ktorú Google skript zavolá po stiahnutí
+    window[callbackName] = function(data) {
+        delete window[callbackName];
+        script.remove();
 
-            flatpickr(`#${targetElementId}`, {
-                inline: true,
-                locale: 'sk',
-                minDate: 'today',
-                disable: disabledDates,
-                dateFormat: 'Y-m-d'
+        const disabledDates = [];
+        if (data.status === 'success' && data.booked) {
+            data.booked.forEach(range => {
+                disabledDates.push({
+                    from: range.from,
+                    to: range.to
+                });
             });
-        })
-        .catch(err => console.error(`Chyba načítania pre ${boxId}:`, err));
+        }
+
+        flatpickr(`#${targetElementId}`, {
+            inline: true,
+            locale: 'sk',
+            minDate: 'today',
+            disable: disabledDates,
+            dateFormat: 'Y-m-d'
+        });
+    };
+
+    // Odoslanie požiadavky ako bežný script element (obchádza CORS na 100 %)
+    script.src = `${SCRIPT_URL}?box=${boxId}&callback=${callbackName}`;
+    document.body.appendChild(script);
 }
 
-// Spustenie kalendárov po načítaní
 document.addEventListener('DOMContentLoaded', () => {
     nacitajDostupnost('400l', 'calendar-400l');
     nacitajDostupnost('500l', 'calendar-500l');
