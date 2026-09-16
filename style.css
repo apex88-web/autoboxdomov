@@ -347,3 +347,28 @@ footer {
         gap: 0; 
     }
 }
+.calendar-wrapper {
+    margin: 15px 0;
+}
+
+.calendar-wrapper h4 {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    color: #4b5563;
+}
+
+/* Prispôsobenie inline kalendára na šírku karty */
+.flatpickr-calendar.inline {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-shadow: none !important;
+    border: 1px solid #e5e7eb;
+}
+
+/* Zvýraznenie obsadených dní */
+.flatpickr-day.flatpickr-disabled, 
+.flatpickr-day.flatpickr-disabled:hover {
+    background-color: #fee2e2 !important;
+    color: #ef4444 !important;
+    text-decoration: line-through;
+}
