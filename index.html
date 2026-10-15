@@ -126,6 +126,15 @@
                 <a href="#rezervacia" class="btn-primary" onclick="vyberBoxZPonuky('420l')">Vybrať tento box</a>
             </div>
         </div>
+<div style="display: flex; gap: 16px; justify-content: center; margin: 10px 0 16px; font-size: 0.85rem;">
+    <span style="display: flex; align-items: center; gap: 6px;">
+        <span style="width: 12px; height: 12px; border-radius: 3px; background: #ecfdf5; border: 1px solid #a7f3d0;"></span> Voľný termín
+    </span>
+    <span style="display: flex; align-items: center; gap: 6px;">
+        <span style="width: 12px; height: 12px; border-radius: 3px; background: #fef2f2; border: 1px solid #fca5a5;"></span> Obsadené
+    </span>
+</div>
+        
     </section>
 
    <!-- REZERVAČNÝ FORMULÁR -->
@@ -206,13 +215,18 @@
     let calendarsInitialized = false;
 
     function highlightBooked(boxKey, dayElem, fp) {
-        if (dayElem.classList.contains('prevMonthDay') || dayElem.classList.contains('nextMonthDay')) return;
-        const dateStr = fp.formatDate(dayElem.dateObj, "Y-m-d");
-        const isBooked = (bookedData[boxKey] || []).some(r => dateStr >= r.from && dateStr <= r.to);
-        if (isBooked) {
-            dayElem.classList.add('day-booked');
-        }
+    if (dayElem.classList.contains('prevMonthDay') || dayElem.classList.contains('nextMonthDay')) return;
+    
+    // Získame formátovaný dátum bunky YYYY-MM-DD
+    const dateStr = fp.formatDate(dayElem.dateObj, "Y-m-d");
+    
+    // Skontrolujeme, či dátum spadá do niektorého rezervovaného rozsahu
+    const isBooked = (bookedData[boxKey] || []).some(r => dateStr >= r.from && dateStr <= r.to);
+    
+    if (isBooked) {
+        dayElem.classList.add('day-booked');
     }
+   }
 
     function aktualizujDostupnostFormulara(boxKey) {
         if (!fpFrom || !fpTo) return;
@@ -284,21 +298,24 @@
 
         const script = document.createElement('script');
         window.renderAllCalendars = function(response) {
-            delete window.renderAllCalendars;
-            script.remove();
+    delete window.renderAllCalendars;
+    script.remove();
 
-            if (response.status === 'success' && response.data) {
-                bookedData = response.data;
-                
-                fp300.set('disable', (bookedData['300l'] || []).map(r => ({ from: r.from, to: r.to })));
-                fp420.set('disable', (bookedData['420l'] || []).map(r => ({ from: r.from, to: r.to })));
-                fp300.redraw();
-                fp420.redraw();
+    if (response.status === 'success' && response.data) {
+        bookedData = response.data;
+        
+        // Nastavíme zakázané rozsahy
+        fp300.set('disable', (bookedData['300l'] || []).map(r => ({ from: r.from, to: r.to })));
+        fp420.set('disable', (bookedData['420l'] || []).map(r => ({ from: r.from, to: r.to })));
+        
+        // Prekreslíme kalendáre, čím sa spustí onDayCreate s novými farbami
+        fp300.redraw();
+        fp420.redraw();
 
-                const currentBox = document.getElementById('box-select').value;
-                aktualizujDostupnostFormulara(currentBox);
-            }
-        };
+        const currentBox = document.getElementById('box-select').value;
+        aktualizujDostupnostFormulara(currentBox);
+    }
+};
 
         script.src = `${SCRIPT_URL}?callback=renderAllCalendars`;
         document.body.appendChild(script);
