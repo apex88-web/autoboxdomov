@@ -533,4 +533,44 @@ footer {
 .box-card:hover .box-image-wrap img {
     transform: scale(1.03);
 }
+    Rozumiem. Aby návštevník okamžite na prvý pohľad videl stav obsadenosti, v kalendároch podfarbíme obsadené dni na červeno a všetky dostupné (voľné) dni na zeleno.
+
+1. Úprava CSS v style.css
+Doplň alebo uprav tieto štýly v style.css (pridaj ich na koniec súboru):
+
+CSS
+/* ZVÝRAZNENIE TERMÍNOV V KALENDÁRI */
+
+/* Voľné dni (zelené) */
+.flatpickr-day:not(.flatpickr-disabled):not(.prevMonthDay):not(.nextMonthDay) {
+    background-color: #ecfdf5 !important;
+    border-color: #a7f3d0 !important;
+    color: #047857 !important;
+    font-weight: 600;
+}
+
+.flatpickr-day:not(.flatpickr-disabled):not(.prevMonthDay):not(.nextMonthDay):hover {
+    background-color: #10b981 !important;
+    border-color: #059669 !important;
+    color: #ffffff !important;
+}
+
+/* Obsadené / rezervované dni (červené) */
+.flatpickr-day.day-booked,
+.flatpickr-day.flatpickr-disabled.day-booked {
+    background-color: #fef2f2 !important;
+    border-color: #fca5a5 !important;
+    color: #b91c1c !important;
+    text-decoration: line-through;
+    opacity: 1 !important;
+    cursor: not-allowed;
+    font-weight: 600;
+}
+
+/* Dni pred dneškom (staré minulé dni necháme neutrálne sivé, aby sa nemiešali s voľnými) */
+.flatpickr-day.flatpickr-disabled:not(.day-booked) {
+    color: #cbd5e1 !important;
+    background-color: transparent !important;
+    border-color: transparent !important;
+}
 }
