@@ -6,7 +6,7 @@
     <title>AutoboxDomov.sk | Požičovňa strešných boxov s dovozom a montážou</title>
     
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="stylesheet" href="style.css?v=5">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"></noscript>
 </head>
@@ -73,14 +73,15 @@
     <section id="ponuka" class="container section">
         <h2>Naše autoboxy</h2>
         <div class="boxes-grid">
+            <!-- BOX 1: 300 litrov -->
             <div class="box-card">
                 <div class="box-header">
                     <h3>Stredný box (300 l)</h3>
                     <span class="price">5 € / deň</span>
                 </div>
-                 <!-- OBRÁZOK BOXU (bez img/ priečinka) -->
+                
                 <div class="box-image-wrap">
-            <img src="Box310_0.jpg" alt="Strešný box 300 litrov na aute" loading="lazy" decoding="async" width="300" height="200">
+                    <img src="Box310_0.jpg" alt="Strešný box 300 litrov na aute" loading="lazy" decoding="async" width="300" height="200">
                 </div>
                 
                 <p class="box-desc">Ideálny pre rodinné výlety a menšiu batožinu. Vhodný pre lyže do dĺžky 175 cm.</p>
@@ -92,33 +93,34 @@
                 
                 <div class="calendar-wrapper">
                     <h4>Dostupnosť boxu:</h4>
-                    <div id="calendar-400l"></div>
+                    <div id="calendar-300l"></div>
                 </div>
                 
-                <a href="#rezervacia" class="btn-secondary" onclick="vyberBoxZPonuky('400l')">Vybrať tento box</a>
+                <a href="#rezervacia" class="btn-secondary" onclick="vyberBoxZPonuky('300l')">Vybrať tento box</a>
             </div>
            
+            <!-- BOX 2: 420 litrov -->
             <div class="box-card featured">
                 <div class="badge">Najobľúbenejší</div>
                 <div class="box-header">
                     <h3>Veľký rodinný box (420 l)</h3>
                     <span class="price">7 € / deň</span>
                 </div>
-         <!-- OBRÁZOK BOXU (bez img/ priečinka) -->
+                
                 <div class="box-image-wrap">
-             <img src="Box400.jpg" alt="Strešný box 420 litrov na aute" loading="lazy" decoding="async" width="300" height="200">
+                    <img src="Box400.jpg" alt="Strešný box 420 litrov na aute" loading="lazy" decoding="async" width="300" height="200">
                 </div>
                 
                 <p class="box-desc">Maximálny priestor pre celú rodinu, kočíky, veľké kufre alebo viacero párov lyží.</p>
                 <ul>
                     <li>Objem: 420 litrov</li>
                     <li>Nosnosť: do 75 kg</li>
-                    <li>Prémiový aerodinamický tvar</li>
+                    <li>Prémiový aerodynamický tvar</li>
                 </ul>
                 
                 <div class="calendar-wrapper">
                     <h4>Dostupnosť boxu:</h4>
-                    <div id="calendar-500l"></div>
+                    <div id="calendar-420l"></div>
                 </div>
                 
                 <a href="#rezervacia" class="btn-primary" onclick="vyberBoxZPonuky('420l')">Vybrať tento box</a>
@@ -141,8 +143,8 @@
                 <div class="form-group">
                     <label for="box-select">Vybraný autobox:</label>
                     <select id="box-select" name="box">
-                        <option value="400l">Stredný box (400 l) – 5 € / deň</option>
-                        <option value="500l" selected>Veľký rodinný box (420 l) – 7 € / deň</option>
+                        <option value="300l">Stredný box (300 l) – 5 € / deň</option>
+                        <option value="420l" selected>Veľký rodinný box (420 l) – 7 € / deň</option>
                     </select>
                 </div>
 
@@ -198,9 +200,9 @@
     <script>
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyp3pAn0eg-6FBReQiUg9RPWEz7v0ZA04Ax9XbPhRB6pjaZF4gFEGggsEzXav4VwtUF/exec';
 
-    let fp400, fp500;
+    let fp300, fp420;
     let fpFrom, fpTo;
-    let bookedData = { '400l': [], '420l': [] };
+    let bookedData = { '300l': [], '420l': [] };
     let calendarsInitialized = false;
 
     function highlightBooked(boxKey, dayElem, fp) {
@@ -262,16 +264,16 @@
 
         initFormDatepickers();
 
-        fp400 = flatpickr('#calendar-400l', {
+        fp300 = flatpickr('#calendar-300l', {
             inline: true,
             locale: 'sk',
             minDate: 'today',
             dateFormat: 'Y-m-d',
             showMonths: 1,
-            onDayCreate: (dObj, dStr, fp, el) => highlightBooked('400l', el, fp)
+            onDayCreate: (dObj, dStr, fp, el) => highlightBooked('300l', el, fp)
         });
 
-        fp500 = flatpickr('#calendar-500l', {
+        fp420 = flatpickr('#calendar-420l', {
             inline: true,
             locale: 'sk',
             minDate: 'today',
@@ -288,10 +290,10 @@
             if (response.status === 'success' && response.data) {
                 bookedData = response.data;
                 
-                fp400.set('disable', bookedData['400l'].map(r => ({ from: r.from, to: r.to })));
-                fp500.set('disable', bookedData['420l'].map(r => ({ from: r.from, to: r.to })));
-                fp400.redraw();
-                fp500.redraw();
+                fp300.set('disable', (bookedData['300l'] || []).map(r => ({ from: r.from, to: r.to })));
+                fp420.set('disable', (bookedData['420l'] || []).map(r => ({ from: r.from, to: r.to })));
+                fp300.redraw();
+                fp420.redraw();
 
                 const currentBox = document.getElementById('box-select').value;
                 aktualizujDostupnostFormulara(currentBox);
