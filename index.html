@@ -121,7 +121,7 @@
                     <div id="calendar-500l"></div>
                 </div>
                 
-                <a href="#rezervacia" class="btn-primary" onclick="vyberBoxZPonuky('500l')">Vybrať tento box</a>
+                <a href="#rezervacia" class="btn-primary" onclick="vyberBoxZPonuky('420l')">Vybrať tento box</a>
             </div>
         </div>
     </section>
@@ -142,7 +142,7 @@
                     <label for="box-select">Vybraný autobox:</label>
                     <select id="box-select" name="box">
                         <option value="400l">Stredný box (400 l) – 5 € / deň</option>
-                        <option value="500l" selected>Veľký rodinný box (500 l) – 7 € / deň</option>
+                        <option value="500l" selected>Veľký rodinný box (420 l) – 7 € / deň</option>
                     </select>
                 </div>
 
@@ -200,7 +200,7 @@
 
     let fp400, fp500;
     let fpFrom, fpTo;
-    let bookedData = { '400l': [], '500l': [] };
+    let bookedData = { '400l': [], '420l': [] };
     let calendarsInitialized = false;
 
     function highlightBooked(boxKey, dayElem, fp) {
@@ -277,7 +277,7 @@
             minDate: 'today',
             dateFormat: 'Y-m-d',
             showMonths: 1,
-            onDayCreate: (dObj, dStr, fp, el) => highlightBooked('500l', el, fp)
+            onDayCreate: (dObj, dStr, fp, el) => highlightBooked('420l', el, fp)
         });
 
         const script = document.createElement('script');
@@ -289,7 +289,7 @@
                 bookedData = response.data;
                 
                 fp400.set('disable', bookedData['400l'].map(r => ({ from: r.from, to: r.to })));
-                fp500.set('disable', bookedData['500l'].map(r => ({ from: r.from, to: r.to })));
+                fp500.set('disable', bookedData['420l'].map(r => ({ from: r.from, to: r.to })));
                 fp400.redraw();
                 fp500.redraw();
 
