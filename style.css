@@ -92,8 +92,7 @@ nav a:hover {
     background-color: var(--primary);
 }
 
-
-/* HERO SEKCIA - Svieži, prémiový kráľovsko-modrý gradient */
+/* HERO SEKCIA */
 .hero {
     background: radial-gradient(circle at 50% 25%, #2563eb 0%, #1d4ed8 50%, #0f2b66 100%);
     color: white;
@@ -136,7 +135,7 @@ nav a:hover {
     font-size: 1.15rem;
     max-width: 660px;
     margin: 0 auto 34px;
-    color: #e0e7ff; /* Jasnejší, jemne modrastý biely text */
+    color: #e0e7ff;
     line-height: 1.6;
 }
 
@@ -189,15 +188,6 @@ nav a:hover {
 
 .btn-ghost:hover {
     background: rgba(255, 255, 255, 0.12);
-}
-
-.hero-trust {
-    display: flex;
-    justify-content: center;
-    gap: 32px;
-    color: #94a3b8;
-    font-size: 0.95rem;
-    font-weight: 500;
 }
 
 /* AKO TO FUNGUJE */
@@ -304,6 +294,28 @@ nav a:hover {
     border-bottom: 1px solid var(--slate-100);
     font-size: 0.92rem;
     color: var(--slate-800);
+}
+
+.box-image-wrap {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    margin: 8px 0 16px;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: var(--slate-100);
+    border: 1px solid var(--border);
+}
+
+.box-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.box-card:hover .box-image-wrap img {
+    transform: scale(1.03);
 }
 
 .btn-secondary {
@@ -414,32 +426,22 @@ nav a:hover {
     background: transparent !important;
 }
 
-.flatpickr-day.prevMonthDay,
-.flatpickr-day.nextMonthDay,
-.flatpickr-day.flatpickr-disabled:not(.day-booked) {
-    color: #cbd5e1 !important;
-    background: transparent !important;
-    border-color: transparent !important;
-    cursor: default;
-}
-
-.flatpickr-day:not(.flatpickr-disabled):not(.prevMonthDay):not(.nextMonthDay) {
-    background-color: #ecfdf5 !important;
-    border-color: #d1fae5 !important;
-    color: #065f46 !important;
-    font-weight: 600;
-    border-radius: 8px;
-}
-
-/* Voľné zelené dni */
-.flatpickr-day:not(.day-booked):not(.prevMonthDay):not(.nextMonthDay):not(.flatpickr-disabled) {
+/* 1. Voľné dni: zelené */
+.flatpickr-day:not(.prevMonthDay):not(.nextMonthDay):not(.flatpickr-disabled):not(.day-booked) {
     background-color: #ecfdf5 !important;
     border-color: #a7f3d0 !important;
     color: #047857 !important;
     font-weight: 600 !important;
+    border-radius: 8px !important;
 }
 
-/* Obsadené červené dni (prebije všetko) */
+.flatpickr-day:not(.prevMonthDay):not(.nextMonthDay):not(.flatpickr-disabled):not(.day-booked):hover {
+    background-color: #10b981 !important;
+    border-color: #059669 !important;
+    color: #ffffff !important;
+}
+
+/* 2. Obsadené dni: červené a prečiarknuté */
 .flatpickr-day.day-booked {
     background-color: #fef2f2 !important;
     border-color: #fca5a5 !important;
@@ -448,6 +450,18 @@ nav a:hover {
     opacity: 1 !important;
     cursor: not-allowed !important;
     font-weight: 700 !important;
+    border-radius: 8px !important;
+}
+
+/* 3. Minulé / neaktívne dni */
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay,
+.flatpickr-day.flatpickr-disabled:not(.day-booked) {
+    color: #cbd5e1 !important;
+    background: transparent !important;
+    border-color: transparent !important;
+    cursor: default !important;
+    text-decoration: none !important;
 }
 
 /* PÄTIČKA */
@@ -461,7 +475,6 @@ footer {
 
 /* MOBIL */
 @media (max-width: 768px) {
-    /* 1. Čistý jednoriadkový header: logo vľavo, tlačidlo vpravo */
     .nav-container {
         flex-direction: row;
         justify-content: space-between;
@@ -474,12 +487,10 @@ footer {
         font-size: 1.2rem;
     }
 
-    /* Skryjeme textové odkazy, ktoré zalamovali riadok */
     nav a:not(.btn-nav) {
         display: none;
     }
 
-    /* Kompaktné tlačidlo vpravo */
     nav .btn-nav {
         margin-left: 0;
         padding: 8px 14px;
@@ -487,7 +498,6 @@ footer {
         border-radius: 6px;
     }
 
-    /* 2. Zmenšenie rozstupov hero sekcie na mobile */
     .hero {
         padding: 50px 0 45px;
     }
@@ -507,7 +517,6 @@ footer {
         gap: 10px;
     }
 
-    /* 3. Jednostĺpcový formulár */
     .booking-form {
         padding: 20px 16px;
     }
@@ -516,67 +525,4 @@ footer {
         grid-template-columns: 1fr;
         gap: 0;
     }
-
-    /* OBRÁZKY V KARTÁCH BOXOV */
-.box-image-wrap {
-    width: 100%;
-    aspect-ratio: 16 / 10;
-    margin: 8px 0 16px;
-    border-radius: 12px;
-    overflow: hidden;
-    background-color: var(--slate-100, #f1f5f9);
-    border: 1px solid var(--border, #e2e8f0);
-}
-
-.box-image-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.3s ease;
-}
-
-.box-card:hover .box-image-wrap img {
-    transform: scale(1.03);
-}
-    Rozumiem. Aby návštevník okamžite na prvý pohľad videl stav obsadenosti, v kalendároch podfarbíme obsadené dni na červeno a všetky dostupné (voľné) dni na zeleno.
-
-1. Úprava CSS v style.css
-Doplň alebo uprav tieto štýly v style.css (pridaj ich na koniec súboru):
-
-CSS
-/* ZVÝRAZNENIE TERMÍNOV V KALENDÁRI */
-
-/* Voľné dni (zelené) */
-.flatpickr-day:not(.flatpickr-disabled):not(.prevMonthDay):not(.nextMonthDay) {
-    background-color: #ecfdf5 !important;
-    border-color: #a7f3d0 !important;
-    color: #047857 !important;
-    font-weight: 600;
-}
-
-.flatpickr-day:not(.flatpickr-disabled):not(.prevMonthDay):not(.nextMonthDay):hover {
-    background-color: #10b981 !important;
-    border-color: #059669 !important;
-    color: #ffffff !important;
-}
-
-/* Obsadené / rezervované dni (červené) */
-.flatpickr-day.day-booked,
-.flatpickr-day.flatpickr-disabled.day-booked {
-    background-color: #fef2f2 !important;
-    border-color: #fca5a5 !important;
-    color: #b91c1c !important;
-    text-decoration: line-through;
-    opacity: 1 !important;
-    cursor: not-allowed;
-    font-weight: 600;
-}
-
-/* Dni pred dneškom (staré minulé dni necháme neutrálne sivé, aby sa nemiešali s voľnými) */
-.flatpickr-day.flatpickr-disabled:not(.day-booked) {
-    color: #cbd5e1 !important;
-    background-color: transparent !important;
-    border-color: transparent !important;
-}
 }
