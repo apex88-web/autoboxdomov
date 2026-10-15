@@ -207,132 +207,155 @@
 
     <!-- LOGIKA KALENDÁROV A DYNAMICKÉHO FORMULÁRA -->
     <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyp3pAn0eg-6FBReQiUg9RPWEz7v0ZA04Ax9XbPhRB6pjaZF4gFEGggsEzXav4VwtUF/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyp3pAn0eg-6FBReQiUg9RPWEz7v0ZA04Ax9XbPhRB6pjaZF4gFEGggsEzXav4VwtUF/exec';
 
-    let fp300, fp420;
-    let fpFrom, fpTo;
-    let bookedData = { '300l': [], '420l': [] };
-    let calendarsInitialized = false;
+let fp300, fp420;
+let fpFrom, fpTo;
+let bookedData = { '300l': [], '420l': [] };
+let calendarsInitialized = false;
 
-    function highlightBooked(boxKey, dayElem, fp) {
-    if (dayElem.classList.contains('prevMonthDay') || dayElem.classList.contains('nextMonthDay')) return;
-    
-    // Získame formátovaný dátum bunky YYYY-MM-DD
-    const dateStr = fp.formatDate(dayElem.dateObj, "Y-m-d");
-    
-    // Skontrolujeme, či dátum spadá do niektorého rezervovaného rozsahu
-    const isBooked = (bookedData[boxKey] || []).some(r => dateStr >= r.from && dateStr <= r.to);
-    
-    if (isBooked) {
-        dayElem.classList.add('day-booked');
-    }
-   }
+// Pomocná funkcia: naformátuje Date objekt na YYYY-MM-DD v lokálnom čase (bez posunu časových pásiem)
+function formatLocalYMD(d) {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
 
-    function aktualizujDostupnostFormulara(boxKey) {
-        if (!fpFrom || !fpTo) return;
-        const disabledRanges = (bookedData[boxKey] || []).map(r => ({ from: r.from, to: r.to }));
-        fpFrom.clear();
-        fpTo.clear();
-        fpFrom.set('disable', disabledRanges);
-        fpTo.set('disable', disabledRanges);
-    }
+// Funkcia, ktorá priamo prejde vygenerované dni v kalendári a podfarbí ich na červeno
+function applyBookedStyles(calendarId, boxKey) {
+    const wrapper = document.querySelector(calendarId);
+    if (!wrapper) return;
 
-    function vyberBoxZPonuky(boxKey) {
-        const select = document.getElementById('box-select');
-        if (select) {
-            select.value = boxKey;
-            aktualizujDostupnostFormulara(boxKey);
+    const days = wrapper.querySelectorAll('.flatpickr-day');
+    const ranges = bookedData[boxKey] || [];
+
+    days.forEach(dayElem => {
+        if (dayElem.classList.contains('prevMonthDay') || dayElem.classList.contains('nextMonthDay')) return;
+        if (!dayElem.dateObj) return;
+
+        const dateStr = formatLocalYMD(dayElem.dateObj);
+        const isBooked = ranges.some(r => dateStr >= r.from && dateStr <= r.to);
+
+        if (isBooked) {
+            dayElem.classList.add('day-booked');
+            dayElem.classList.add('flatpickr-disabled');
+        } else {
+            dayElem.classList.remove('day-booked');
         }
+    });
+}
+
+function aktualizujDostupnostFormulara(boxKey) {
+    if (!fpFrom || !fpTo) return;
+    const disabledRanges = (bookedData[boxKey] || []).map(r => ({ from: r.from, to: r.to }));
+    fpFrom.clear();
+    fpTo.clear();
+    fpFrom.set('disable', disabledRanges);
+    fpTo.set('disable', disabledRanges);
+}
+
+function vyberBoxZPonuky(boxKey) {
+    const select = document.getElementById('box-select');
+    if (select) {
+        select.value = boxKey;
+        aktualizujDostupnostFormulara(boxKey);
     }
+}
 
-    function initFormDatepickers() {
-        fpFrom = flatpickr('#date-from', {
-            locale: 'sk',
-            minDate: 'today',
-            dateFormat: 'Y-m-d',
-            onChange: function(selectedDates, dateStr) {
-                if (fpTo) {
-                    fpTo.set('minDate', dateStr);
-                }
+function initFormDatepickers() {
+    fpFrom = flatpickr('#date-from', {
+        locale: 'sk',
+        minDate: 'today',
+        dateFormat: 'Y-m-d',
+        onChange: function(selectedDates, dateStr) {
+            if (fpTo) {
+                fpTo.set('minDate', dateStr);
             }
-        });
-
-        fpTo = flatpickr('#date-to', {
-            locale: 'sk',
-            minDate: 'today',
-            dateFormat: 'Y-m-d'
-        });
-
-        const select = document.getElementById('box-select');
-        if (select) {
-            select.addEventListener('change', (e) => {
-                aktualizujDostupnostFormulara(e.target.value);
-            });
-            aktualizujDostupnostFormulara(select.value);
         }
-    }
+    });
 
-    function initCalendars() {
-        if (calendarsInitialized || typeof flatpickr === 'undefined') return;
-        calendarsInitialized = true;
+    fpTo = flatpickr('#date-to', {
+        locale: 'sk',
+        minDate: 'today',
+        dateFormat: 'Y-m-d'
+    });
 
-        initFormDatepickers();
-
-        fp300 = flatpickr('#calendar-300l', {
-            inline: true,
-            locale: 'sk',
-            minDate: 'today',
-            dateFormat: 'Y-m-d',
-            showMonths: 1,
-            onDayCreate: (dObj, dStr, fp, el) => highlightBooked('300l', el, fp)
+    const select = document.getElementById('box-select');
+    if (select) {
+        select.addEventListener('change', (e) => {
+            aktualizujDostupnostFormulara(e.target.value);
         });
-
-        fp420 = flatpickr('#calendar-420l', {
-            inline: true,
-            locale: 'sk',
-            minDate: 'today',
-            dateFormat: 'Y-m-d',
-            showMonths: 1,
-            onDayCreate: (dObj, dStr, fp, el) => highlightBooked('420l', el, fp)
-        });
-
-        const script = document.createElement('script');
-        window.renderAllCalendars = function(response) {
-    delete window.renderAllCalendars;
-    script.remove();
-
-    if (response.status === 'success' && response.data) {
-        bookedData = response.data;
-        
-        // Nastavíme zakázané rozsahy
-        fp300.set('disable', (bookedData['300l'] || []).map(r => ({ from: r.from, to: r.to })));
-        fp420.set('disable', (bookedData['420l'] || []).map(r => ({ from: r.from, to: r.to })));
-        
-        // Prekreslíme kalendáre, čím sa spustí onDayCreate s novými farbami
-        fp300.redraw();
-        fp420.redraw();
-
-        const currentBox = document.getElementById('box-select').value;
-        aktualizujDostupnostFormulara(currentBox);
+        aktualizujDostupnostFormulara(select.value);
     }
-};
+}
 
-        script.src = `${SCRIPT_URL}?callback=renderAllCalendars`;
-        document.body.appendChild(script);
-    }
+function initCalendars() {
+    if (calendarsInitialized || typeof flatpickr === 'undefined') return;
+    calendarsInitialized = true;
 
-    const ponukaSection = document.getElementById('ponuka');
-    if ('IntersectionObserver' in window && ponukaSection) {
-        const observer = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting) {
-                initCalendars();
-                observer.disconnect();
-            }
-        }, { rootMargin: '200px' });
-        observer.observe(ponukaSection);
-    } else {
-        window.addEventListener('load', () => setTimeout(initCalendars, 1000));
-    }
-    </script>
+    initFormDatepickers();
+
+    // Vytvorenie statických inline kalendárov
+    fp300 = flatpickr('#calendar-300l', {
+        inline: true,
+        locale: 'sk',
+        minDate: 'today',
+        dateFormat: 'Y-m-d',
+        showMonths: 1,
+        onMonthChange: () => setTimeout(() => applyBookedStyles('#calendar-300l', '300l'), 10),
+        onYearChange: () => setTimeout(() => applyBookedStyles('#calendar-300l', '300l'), 10)
+    });
+
+    fp420 = flatpickr('#calendar-420l', {
+        inline: true,
+        locale: 'sk',
+        minDate: 'today',
+        dateFormat: 'Y-m-d',
+        showMonths: 1,
+        onMonthChange: () => setTimeout(() => applyBookedStyles('#calendar-420l', '420l'), 10),
+        onYearChange: () => setTimeout(() => applyBookedStyles('#calendar-420l', '420l'), 10)
+    });
+
+    // Načítanie rezervácií cez JSONP
+    const script = document.createElement('script');
+    window.renderAllCalendars = function(response) {
+        delete window.renderAllCalendars;
+        script.remove();
+
+        if (response && response.status === 'success' && response.data) {
+            bookedData = response.data;
+
+            // Zakážeme kliknutie na obsadené dni vo Flatpickri
+            fp300.set('disable', (bookedData['300l'] || []).map(r => ({ from: r.from, to: r.to })));
+            fp420.set('disable', (bookedData['420l'] || []).map(r => ({ from: r.from, to: r.to })));
+
+            // Aplikujeme červenú/zelenú farbu priamo do DOM buniek
+            applyBookedStyles('#calendar-300l', '300l');
+            applyBookedStyles('#calendar-420l', '420l');
+
+            const currentBox = document.getElementById('box-select').value;
+            aktualizujDostupnostFormulara(currentBox);
+        }
+    };
+
+    script.src = `${SCRIPT_URL}?callback=renderAllCalendars&t=${Date.now()}`;
+    document.body.appendChild(script);
+}
+
+// Spustenie pri zobrazení ponuky
+const ponukaSection = document.getElementById('ponuka');
+if ('IntersectionObserver' in window && ponukaSection) {
+    const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            initCalendars();
+            observer.disconnect();
+        }
+    }, { rootMargin: '200px' });
+    observer.observe(ponukaSection);
+} else {
+    window.addEventListener('load', () => setTimeout(initCalendars, 500));
+}
+</script>
 </body>
 </html>
