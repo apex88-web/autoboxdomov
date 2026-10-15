@@ -570,4 +570,13 @@ footer {
         grid-template-columns: 1fr;
         gap: 0;
     }
+
+    /* Zarovnanie tlačidiel na stred pod kalendárom */
+.box-card .btn-primary,
+.box-card .btn-secondary {
+    display: block;
+    text-align: center;
+    width: 100%;
+    margin: 0 auto;
+}
 }
