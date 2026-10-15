@@ -520,6 +520,51 @@ footer {
     .booking-form {
         padding: 20px 16px;
     }
+
+    @media (max-width: 768px) {
+    /* Zmenšenie vnútorných okrajov karty, aby vzniklo miesto pre 7 dní */
+    .boxes-grid {
+        gap: 20px;
+    }
+
+    .box-card {
+        padding: 24px 12px;
+    }
+
+    .calendar-wrapper {
+        padding: 10px 4px;
+        margin: 14px 0 18px;
+    }
+
+    /* Prispôsobenie buniek kalendára na plnú šírku mobilu */
+    .flatpickr-calendar.inline {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .flatpickr-days {
+        width: 100% !important;
+    }
+
+    .dayContainer {
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        justify-content: space-around;
+    }
+
+    .flatpickr-day {
+        max-width: 14.28% !important;
+        height: 34px !important;
+        line-height: 34px !important;
+        font-size: 0.85rem !important;
+        margin: 1px 0 !important;
+    }
+
+    span.flatpickr-weekday {
+        font-size: 0.78rem !important;
+    }
+}
     
     .form-row {
         grid-template-columns: 1fr;
