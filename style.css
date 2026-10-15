@@ -431,17 +431,23 @@ nav a:hover {
     border-radius: 8px;
 }
 
-.flatpickr-day:not(.flatpickr-disabled):not(.prevMonthDay):not(.nextMonthDay):hover {
-    background-color: #a7f3d0 !important;
+/* Voľné zelené dni */
+.flatpickr-day:not(.day-booked):not(.prevMonthDay):not(.nextMonthDay):not(.flatpickr-disabled) {
+    background-color: #ecfdf5 !important;
+    border-color: #a7f3d0 !important;
+    color: #047857 !important;
+    font-weight: 600 !important;
 }
 
+/* Obsadené červené dni (prebije všetko) */
 .flatpickr-day.day-booked {
     background-color: #fef2f2 !important;
-    border-color: #fecaca !important;
+    border-color: #fca5a5 !important;
     color: #dc2626 !important;
     text-decoration: line-through !important;
-    font-weight: 600;
-    border-radius: 8px;
+    opacity: 1 !important;
+    cursor: not-allowed !important;
+    font-weight: 700 !important;
 }
 
 /* PÄTIČKA */
